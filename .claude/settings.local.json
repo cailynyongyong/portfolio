@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:jaegpark.me)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
