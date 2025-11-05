@@ -212,8 +212,20 @@ export default async function Home() {
                 </LinkPreview>
               </li>
               <li>
-                played flag football for 9 years, got selected as national team
-                athelete for 2028 Olympics
+                <LinkPreview
+                  href="https://www.instagram.com/p/DF6nsIhhozz/?img_index=1"
+                  className="underline"
+                  preview={{
+                    title: "Flag Football",
+                    description:
+                      "got selected as national team athelete for 2028 Olympics",
+                    image: "/flag.png",
+                  }}
+                >
+                  played flag football
+                </LinkPreview>{" "}
+                for 9 years, got selected as national team athelete for 2028
+                Olympics
               </li>
               <li>
                 you may have seen me on{" "}
