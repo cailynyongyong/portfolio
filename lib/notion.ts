@@ -6,10 +6,23 @@ export interface BlogPost {
   url?: string;
 }
 
+export interface RichTextSegment {
+  text: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
+  color?: string;
+  href?: string;
+}
+
 export interface BlogPostDetail extends BlogPost {
   content: Array<{
     type: string;
     text: string;
+    richText?: RichTextSegment[];
+    imageUrl?: string;
   }>;
 }
 
@@ -182,16 +195,41 @@ export async function getBlogPost(
     const content = blocksData.results.map((block: any) => {
       const type = block.type;
       let text = "";
+      let richText: RichTextSegment[] = [];
+      let imageUrl = "";
 
       if (block[type]?.rich_text) {
         text = block[type].rich_text
           .map((richText: any) => richText.plain_text)
           .join("");
+
+        // Extract rich text formatting
+        richText = block[type].rich_text.map((rt: any) => ({
+          text: rt.plain_text,
+          bold: rt.annotations?.bold,
+          italic: rt.annotations?.italic,
+          underline: rt.annotations?.underline,
+          strikethrough: rt.annotations?.strikethrough,
+          code: rt.annotations?.code,
+          color: rt.annotations?.color,
+          href: rt.href,
+        }));
+      }
+
+      // Handle image blocks
+      if (type === "image") {
+        if (block.image.type === "file") {
+          imageUrl = block.image.file.url;
+        } else if (block.image.type === "external") {
+          imageUrl = block.image.external.url;
+        }
       }
 
       return {
         type,
         text,
+        richText,
+        imageUrl,
       };
     });
 

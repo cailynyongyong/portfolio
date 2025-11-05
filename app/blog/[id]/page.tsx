@@ -1,5 +1,6 @@
 import { getBlogPost } from "@/lib/notion";
 import Link from "next/link";
+import RichText from "@/app/components/RichText";
 
 export default async function BlogPost({
   params,
@@ -38,38 +39,68 @@ export default async function BlogPost({
         <article>
           <header className="mb-8">
             <h1 className="text-4xl font-bold text-black mb-4">{post.title}</h1>
-            {post.date && <time className="text-gray-500">{post.date}</time>}
+            {post.date && <time className="text-gray-500 text-sm">{post.date}</time>}
           </header>
 
-          <div className="prose prose-lg max-w-none">
+          <div className="prose max-w-none text-sm">
             {post.content.map((block, index) => (
-              <div key={index} className="mb-4">
+              <div key={index} className="mb-2">
                 {block.type === "paragraph" && (
-                  <p className="text-black leading-relaxed">{block.text}</p>
+                  <p className="text-black leading-relaxed text-sm">
+                    {block.richText ? (
+                      <RichText segments={block.richText} />
+                    ) : (
+                      block.text
+                    )}
+                  </p>
                 )}
                 {block.type === "heading_1" && (
                   <h1 className="text-3xl font-bold text-black mt-8 mb-4">
-                    {block.text}
+                    {block.richText ? (
+                      <RichText segments={block.richText} />
+                    ) : (
+                      block.text
+                    )}
                   </h1>
                 )}
                 {block.type === "heading_2" && (
                   <h2 className="text-2xl font-bold text-black mt-6 mb-3">
-                    {block.text}
+                    {block.richText ? (
+                      <RichText segments={block.richText} />
+                    ) : (
+                      block.text
+                    )}
                   </h2>
                 )}
                 {block.type === "heading_3" && (
                   <h3 className="text-xl font-bold text-black mt-4 mb-2">
-                    {block.text}
+                    {block.richText ? (
+                      <RichText segments={block.richText} />
+                    ) : (
+                      block.text
+                    )}
                   </h3>
                 )}
                 {block.type === "bulleted_list_item" && (
                   <ul className="list-disc list-inside">
-                    <li className="text-black">{block.text}</li>
+                    <li className="text-black text-sm">
+                      {block.richText ? (
+                        <RichText segments={block.richText} />
+                      ) : (
+                        block.text
+                      )}
+                    </li>
                   </ul>
                 )}
                 {block.type === "numbered_list_item" && (
                   <ol className="list-decimal list-inside">
-                    <li className="text-black">{block.text}</li>
+                    <li className="text-black text-sm">
+                      {block.richText ? (
+                        <RichText segments={block.richText} />
+                      ) : (
+                        block.text
+                      )}
+                    </li>
                   </ol>
                 )}
                 {block.type === "code" && (
@@ -78,9 +109,20 @@ export default async function BlogPost({
                   </pre>
                 )}
                 {block.type === "quote" && (
-                  <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-700">
-                    {block.text}
+                  <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-700 text-sm">
+                    {block.richText ? (
+                      <RichText segments={block.richText} />
+                    ) : (
+                      block.text
+                    )}
                   </blockquote>
+                )}
+                {block.type === "image" && block.imageUrl && (
+                  <img
+                    src={block.imageUrl}
+                    alt=""
+                    className="w-full rounded-lg"
+                  />
                 )}
               </div>
             ))}
